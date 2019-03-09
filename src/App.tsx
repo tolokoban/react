@@ -2,24 +2,51 @@ import * as React from "react"
 import './App.css';
 
 type AppProps = {};
-type AppState = {
-    name?: string | undefined;
-    defaultName: string;
+interface IAppState {
+    name: string;
 };
 
-class App extends React.Component<AppProps, AppState> {
-    constructor(props : AppProps) {
+interface IChangeEventHandler {
+    (event: React.ChangeEvent<HTMLInputElement>): void;
+}
+
+interface ISubmitEventHandler {
+    (event: React.FormEvent<HTMLFormElement>): void;
+}
+
+class App extends React.Component<AppProps, IAppState> {
+    private handleChange: IChangeEventHandler;
+    private handleSubmit: ISubmitEventHandler;
+
+    constructor(props: AppProps) {
         super(props);
+        this.handleChange = this._handleChange.bind(this);
+        this.handleSubmit = this._handleSubmit.bind(this);
         this.state = {
-            defaultName: "Toro"
+            name: ""
         };
+    }
+
+    _handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+        this.setState({
+            name: (event.target as HTMLInputElement).value
+        });
+    }
+
+    _handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+        alert("Yo!");
     }
 
     render() {
         return (<div className="App">
             <header className="App-header">
-                <input type="text" defaultValue={this.state.defaultName} value={this.state.name}/>
-                <p>Hello {this.state.name}!</p>
+                <form onSubmit={this.handleSubmit}>
+                    <input type="text" onChange={this.handleChange} value={this.state.name} />
+                    <p>Hello {this.state.name}
+                        !</p>
+                    < input type="submit" value="Add" />
+                </form>
             </header>
         </div>);
     }
