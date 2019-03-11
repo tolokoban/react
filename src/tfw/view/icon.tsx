@@ -24,6 +24,7 @@ interface IIconProps {
     pen6?: EnumPenColor;
     pen7?: EnumPenColor;
     onClick?: () => void;
+    onHide?: () => void;
 }
 
 export default class Icon extends React.Component<IIconProps, {}> {
@@ -37,20 +38,32 @@ export default class Icon extends React.Component<IIconProps, {}> {
 
     private refIcon: any;
     private visible: boolean;
+    private timeoutHandle: number;
 
     constructor(props: IIconProps) {
         super(props);
         this.refIcon = React.createRef();
         this.visible = false;
+        this.timeoutHandle = 0;
     }
 
-    componentDidMount() {
+    triggerVisibleAnimation() {
         const
             elemIcon = this.refIcon.current,
             visible = this.visible;
+        if (this.timeoutHandle) {
+            window.clearTimeout(this.timeoutHandle);
+            this.timeoutHandle = 0;
+        }
         requestAnimationFrame(() => {
             if (visible) elemIcon.classList.remove("zero");
-            else elemIcon.classList.add("zero");
+            else {
+                elemIcon.classList.add("zero");
+                const slot = this.props.onHide;
+                if (typeof slot === 'function') {
+                    this.timeoutHandle = window.setTimeout(slot, 300);
+                }
+            }
         });
     }
 
@@ -75,7 +88,7 @@ export default class Icon extends React.Component<IIconProps, {}> {
         if (typeof onClick === 'function') classes.push("active");
 
         this.visible = visible;
-        requestAnimationFrame(() => this.componentDidMount());
+        requestAnimationFrame(() => this.triggerVisibleAnimation());
 
         return (
             <svg className={classes.join(" ")}
