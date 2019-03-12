@@ -2,6 +2,7 @@
   "name": "react-test",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost/www/TP",
   "dependencies": {
     "@types/jest": "^24.0.9",
     "@types/node": "^11.10.5",

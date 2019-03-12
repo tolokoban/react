@@ -1,6 +1,7 @@
 import * as React from "react"
 import './App.css';
-import Icon from "./tfw/view/icon";
+import Icon from "./tfw/view/icon"
+import TraceCounter from "./trace-counter"
 
 console.info("Icon=", Icon);
 
@@ -164,6 +165,7 @@ class App extends React.Component<AppProps, IAppState> {
         return (<div className="App">
             <h1>{process.env.NODE_ENV}</h1>
             <header className="App-header">
+                <TraceCounter /><hr />
                 <form onSubmit={this.handleSubmit}>
                     <datalist id="iconsNames">
                         {Icon.getAllIconNames().map(name => (
@@ -220,7 +222,7 @@ class App extends React.Component<AppProps, IAppState> {
                     }</div>
                 </form>
             </header>
-        </div>);
+        </div >);
     }
 }
 
