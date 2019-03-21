@@ -2,7 +2,7 @@ div.word-list {
     overflow: auto;
     padding: 0;
     margin: 1rem;
-    box-shadow: 0 4px 8px rgba(255,255,255,.4);
+    box-shadow: 0 4px 8px #000;
     background: #ccc;
     min-width: 280px;
     max-height: 95vh;
@@ -27,4 +27,13 @@ div.word-list > div.body {
 div.word-list > div.space {
     font-size: 0;
     content: '.';
+}
+
+div.word-list-wait {
+    text-align: center;
+    display: flex;
+    min-width: 280px;
+    height: 280px;
+    justify-content: center;
+    align-items: center;
 }

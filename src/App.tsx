@@ -78,6 +78,8 @@ class App extends React.Component<AppProps, IAppState> {
             icons: [],
             words: []
         };
+        this.handleSortByName = this.handleSortByName.bind(this);
+        this.handleSortByOccurence = this.handleSortByOccurence.bind(this);
     }
 
     componentDidMount() {
@@ -89,11 +91,6 @@ class App extends React.Component<AppProps, IAppState> {
 
         window.setTimeout(() => {
             const wordsList = WORDS.map(wordMapper);
-            wordsList.sort((w1, w2) => {
-                if (w1.name > w2.name) return +1;
-                if (w1.name < w2.name) return -1;
-                return 0;
-            })
             console.log("wordsList", wordsList);
             this.setState({ words: wordsList });
         }, 1000);
@@ -158,6 +155,26 @@ class App extends React.Component<AppProps, IAppState> {
         );
     }
 
+    handleSortByName() {
+        const words = this.state.words;
+        words.sort((w1, w2) => {
+            if (w1.name > w2.name) return +1;
+            if (w1.name < w2.name) return -1;
+            return 0;
+        });
+        this.setState({ words: words.slice() });
+    }
+
+    handleSortByOccurence() {
+        const words = this.state.words;
+        words.sort((w1, w2) => {
+            if (w1.occurences > w2.occurences) return -1;
+            if (w1.occurences < w2.occurences) return +1;
+            return 0;
+        });
+        this.setState({ words: words.slice() });
+    }
+
     handleRemove(iconName: string) {
         const icons = this.state.icons.map(elem => {
             if (elem.name !== iconName) return elem;
@@ -179,6 +196,9 @@ class App extends React.Component<AppProps, IAppState> {
         return (<div className="App" >
             <WordList words={this.state.words} />
             <header className="App-header" >
+                <button onClick={this.handleSortByName}>Sort by name</button>
+                <button onClick={this.handleSortByOccurence}>Sort by occurence</button>
+                <hr />
                 <h1>{process.env.NODE_ENV} </h1>
                 <form onSubmit={this.handleSubmit}>
                     <datalist id="iconsNames" >
@@ -218,7 +238,7 @@ class App extends React.Component<AppProps, IAppState> {
                     <label htmlFor="cboSize" > Size </label>
                     <select value={this.state.size} onChange={this.handleSizeChange} > {
                         Object.keys(SIZES).map(size => (
-                            <option value={size} > {SIZES[size]} </option>
+                            <option value={size} key={`${size}`}> {SIZES[size]} </option>
                         ))
                     } </select>
                     <br />
