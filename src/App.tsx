@@ -2,8 +2,9 @@ import * as React from "react"
 import './App.css';
 import Icon from "./tfw/view/icon"
 import TraceCounter from "./trace-counter"
-
-console.info("Icon=", Icon);
+import WordList from "./word-list"
+import IWord from "./IWord";
+import WORDS from "./words.json";
 
 type AppProps = {};
 
@@ -28,6 +29,7 @@ interface IAppState {
     flipV: boolean;
     disabled: boolean;
     icons: IIconState[];
+    words: any[];
 };
 
 interface IChangeEventHandler {
@@ -73,7 +75,8 @@ class App extends React.Component<AppProps, IAppState> {
             flipH: false,
             flipV: false,
             size: "28px",
-            icons: []
+            icons: [],
+            words: []
         };
     }
 
@@ -83,6 +86,17 @@ class App extends React.Component<AppProps, IAppState> {
             const state = JSON.parse(stringifiedState) as IAppState;
             this.setState(state);
         }
+
+        window.setTimeout(() => {
+            const wordsList = WORDS.map(wordMapper);
+            wordsList.sort((w1, w2) => {
+                if (w1.name > w2.name) return +1;
+                if (w1.name < w2.name) return -1;
+                return 0;
+            })
+            console.log("wordsList", wordsList);
+            this.setState({ words: wordsList });
+        }, 1000);
     }
 
     _handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -162,15 +176,17 @@ class App extends React.Component<AppProps, IAppState> {
     }
 
     render() {
-        return (<div className="App">
-            <h1>{process.env.NODE_ENV}</h1>
-            <header className="App-header">
-                <TraceCounter /><hr />
+        return (<div className="App" >
+            <WordList words={this.state.words} />
+            <header className="App-header" >
+                <h1>{process.env.NODE_ENV} </h1>
                 <form onSubmit={this.handleSubmit}>
-                    <datalist id="iconsNames">
-                        {Icon.getAllIconNames().map(name => (
-                            <option key={name} value={name}></option>
-                        ))}
+                    <datalist id="iconsNames" >
+                        {
+                            Icon.getAllIconNames().map(name => (
+                                <option key={name} value={name} > </option>
+                            ))
+                        }
                     </datalist>
                     <input type="text"
                         autoFocus
@@ -183,31 +199,31 @@ class App extends React.Component<AppProps, IAppState> {
                         checked={this.state.animate}
                         onChange={this.handleAnimateChange}
                         name="chkAnimate" id="chkAnimate" />
-                    <label htmlFor="chkAnimate">Animate</label>
+                    <label htmlFor="chkAnimate" > Animate </label>
                     <br />
                     <input
                         type="checkbox"
                         checked={this.state.flipH}
                         onChange={this.handleFlipHChange}
                         name="chkFlipH" id="chkFlipH" />
-                    <label htmlFor="chkFlipH">Flip Horizontally</label>
+                    <label htmlFor="chkFlipH" > Flip Horizontally </label>
                     <br />
                     <input
                         type="checkbox"
                         checked={this.state.flipV}
                         onChange={this.handleFlipVChange}
                         name="chkFlipV" id="chkFlipV" />
-                    <label htmlFor="chkFlipV">Flip Vertically</label>
+                    <label htmlFor="chkFlipV" > Flip Vertically </label>
                     <br />
-                    <label htmlFor="cboSize">Size </label>
-                    <select value={this.state.size} onChange={this.handleSizeChange}>{
+                    <label htmlFor="cboSize" > Size </label>
+                    <select value={this.state.size} onChange={this.handleSizeChange} > {
                         Object.keys(SIZES).map(size => (
-                            <option value={size}>{SIZES[size]}</option>
+                            <option value={size} > {SIZES[size]} </option>
                         ))
-                    }</select>
+                    } </select>
                     <br />
                     <input type="submit" disabled={this.state.disabled} value="Add" />
-                    <div className="icon-container">{
+                    <div className="icon-container" > {
                         this.state.icons.map(icon => (
                             <Icon key={icon.name}
                                 size={icon.size}
@@ -217,13 +233,20 @@ class App extends React.Component<AppProps, IAppState> {
                                 flipH={icon.flipH}
                                 flipV={icon.flipV}
                                 onHide={() => this.handleDispose(icon.name)}
-                                onClick={() => this.handleRemove(icon.name)}></Icon>
+                                onClick={() => this.handleRemove(icon.name)
+                                }> </Icon>
                         ))
                     }</div>
                 </form>
             </header>
         </div >);
     }
+}
+
+
+function wordMapper(item: any): IWord {
+    const [name, occurences, types] = item;
+    return { name, occurences, types: types.split(",") };
 }
 
 export default App;
