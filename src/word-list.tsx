@@ -35,6 +35,7 @@ export default class WordList extends React.Component<IWordListProps, IWordListS
         this.lastVisibleItemsCount = -1;
         this.lastWordsArray = [];
         this.state = { words: [] };
+        window.onresize = this.onScroll;
     }
 
     onScroll(evt: any = null): void {
@@ -44,13 +45,14 @@ export default class WordList extends React.Component<IWordListProps, IWordListS
         const tail = this.refTail.current;
         if (!main || !head || !body || !tail) return;
         const ITEM_HEIGHT = 36;
-        const top = main.scrollTop;
-        const rect = main.getBoundingClientRect();
+        const top = Math.floor(main.scrollTop);
+        const height = Math.floor(main.getBoundingClientRect().height);
         const itemsCount = this.props.words.length;
-        const firstItemIndex = Math.min(itemsCount, Math.floor(top / ITEM_HEIGHT));
+        const firstItemIndex = Math.min(
+            itemsCount, Math.floor(top / ITEM_HEIGHT));
         const visibleItemsCount = Math.min(
             itemsCount - firstItemIndex,
-            1 + Math.ceil(rect.height / ITEM_HEIGHT)
+            1 + Math.ceil(height / ITEM_HEIGHT)
         );
         const tailCount = this.props.words.length - firstItemIndex - visibleItemsCount;
 
@@ -62,7 +64,8 @@ export default class WordList extends React.Component<IWordListProps, IWordListS
         //console.log(top, `${firstItemIndex}+${visibleItemsCount}+${tailCount}=${firstItemIndex + visibleItemsCount + tailCount}`);
         //console.log(head.style.height, body.style.height, tail.style.height);
 
-        if (this.lastFirstItemIndex !== firstItemIndex || this.lastVisibleItemsCount !== visibleItemsCount) {
+        if (this.lastFirstItemIndex !== firstItemIndex
+            || this.lastVisibleItemsCount !== visibleItemsCount) {
             this.lastFirstItemIndex = firstItemIndex;
             this.lastVisibleItemsCount = visibleItemsCount;
             this.setState({

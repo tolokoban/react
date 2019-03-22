@@ -19,13 +19,14 @@ export default class Word extends React.Component<IWordProps, {}> {
         this.ref = React.createRef();
     }
 
-    componentDidMount() {
-        const div = this.ref.current;
-        if (!div) return;
-        div.classList.add("show");
-        //window.setTimeout(() => div.classList.add("show"));
-    }
-
+    /*
+        componentDidMount() {
+            const div = this.ref.current;
+            if (!div) return;
+            div.classList.add("show");
+            //window.setTimeout(() => div.classList.add("show"));
+        }
+    */
     render() {
         const { name, occurences, types } = this.props;
         return (<div className="word" ref={this.ref}>

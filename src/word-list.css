@@ -6,6 +6,8 @@ div.word-list {
     background: #ccc;
     min-width: 280px;
     max-height: 95vh;
+    /* To prevent a bug in Google Chrome */
+    overflow-anchor: none;
 }
 
 div.word-list > div {
