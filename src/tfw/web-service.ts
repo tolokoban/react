@@ -19,7 +19,6 @@ async function get(name: string, args: {}): Promise<any> {
     const response: ICallResponse = await callService(name, args);
     if (response.code === EnumWebServiceError.OK) {
         const obj = JSON.parse(response.data);
-        console.log(name, "->", obj);
         return obj;
     } else {
         throw response;

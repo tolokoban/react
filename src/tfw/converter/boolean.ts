@@ -1,5 +1,3 @@
-"use strict";
-
 export default function castBoolean(v: any, defaultValue = false): boolean {
     switch (typeof v) {
         case "undefined":
